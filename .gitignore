@@ -1,0 +1,5 @@
+data/*
+padam_data.duckdb
+padam_data.duckdb.wal
+venv/
+analytics_engineer.code-workspace

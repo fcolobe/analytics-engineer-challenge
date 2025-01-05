@@ -1,0 +1,117 @@
+Table raw.products {
+    id integer [pk]
+    name str [note: 'The name of the deployed product']
+    slug str [note: 'A slug which is often used to identify this product']
+    country_code str [note: 'The ISO country code where the product is deployed']
+
+    Note: '''
+    Represents transit service products deployed in different locations.
+    Each product represents a distinct transit service operation in a specific country.
+    '''
+}
+
+Table raw.product_territories {
+    id integer [pk]
+    product_slug str [ref:> raw.products.slug, note: '''Reference to the product. 
+    A product can have multiple territories, allowing for different operational zones''']
+
+    identifier str [note: 'Unique identifier for the territory']
+    name str [note: 'A verbose name']
+
+    Note: '''
+    Defines geographical territories where bus services operate. 
+    A single product can operate across multiple territories, 
+    each potentially with different service parameters.
+    '''
+}
+
+Table raw.users {
+    id integer [pk]
+    product_slug str [ref:> raw.products.slug, note: 'Reference to which transit service the passenger belongs to']
+    registered_at timestamp [note: 'Timestamp when the passenger created their account']
+
+    Note: '''
+    Stores passenger/customer information. 
+    These are the end-users who will book and use the bus services.
+    '''
+}
+
+Table raw.history_search {
+    id integer [pk]
+    user_id integer [ref:> raw.users.id, note: 'Reference to the passenger who performed the search']
+    territory_id integer [ref:> raw.product_territories.id, note: 'Territory where the passenger is searching for a ride']
+    product_slug str [ref:> raw.products.slug, note: 'Reference to which transit service the passenger belongs to']
+
+    passengers_number integer [note: 'Number of passengers included in this search request']
+    
+    nb_propositions integer [note: 'Number of different route/travel options that were presented to the user for this search']
+
+    created_at timestamp [note: 'When the search was performed']
+
+    Note: '''
+    Tracks all search requests made by passengers looking for available rides, 
+    including how many route options were provided.
+    '''
+}
+
+Table raw.dispatch_bookings {
+    id integer [pk]
+    search_id integer [ref:- raw.history_search.id, note: 'Reference to the original search that led to this booking']
+    product_slug str [ref:> raw.products.slug, note: 'Reference to which transit service the passenger belongs to']
+
+    passengers_number integer [note: 'Number of passengers included in this booking']
+    passenger_status str [note: '''
+    Current status of the passenger. Possible values:
+    - INITIAL: Passenger waits to be picked up
+    - ONBOARD: Passenger is in vehicle
+    - DROPOFF: Trip completed
+    - CANCELED: Trip was canceled
+    ''']
+    passenger_status_verbose str [note: 'A version of `passenger_status` easier to read']
+
+    status str [note: '''
+    Booking status indicating its lifecycle state. Possible values:
+    - VALIDATED: Booking confirmed
+    - VALIDATED_BUT_UNASSIGNED: Confirmed but no vehicle assigned
+    - CANCELED_BY_USER: Passenger canceled
+    - CANCELED_BY_SYSTEM: System automated cancellation
+    - CANCELED_BY_DRIVER: Driver canceled
+    - CANCELED_BY_ADMIN: Admin canceled
+    - CANCELED_BY_CALL_CENTER: Call center canceled
+    - CANCELED_BY_PAUSED_STOP: Canceled due to stop being paused
+    - CANCELED_BY_USER_SUSPENSION: User account suspended
+    - CHANGED_BY_USER: Modified by passenger
+    - CHANGED_BY_ADMIN: Modified by admin
+    - CHANGED_BY_CALL_CENTER: Modified by call center
+    ''']
+    status_verbose str [note: 'A version of `status` easier to read']
+    
+    booked_from str [note: '''
+    Channel through which the booking was made. Possible values:
+    - BOOKED_FROM_APP: Mobile application
+    - BOOKED_FROM_WEBSITE: Web interface
+    - BOOKED_FROM_CALL_CENTER: Call center agent
+    - BOOKED_FROM_DRIVER_APP: Driver's application
+    - BOOKED_FROM_EXTERNAL_SYSTEM: External booking system
+    ''']
+
+    pickup_bus_stop_id integer [note: 'Reference to the pickup stop/location']
+    pickup_proposed_time timestamp [note: 'Initially proposed pickup time']
+    pickup_time timestamp [note: 'Actual/confirmed pickup time']
+
+    dropoff_bus_stop_id integer [note: 'Reference to the dropoff stop/location']
+    dropoff_proposed_time timestamp [note: 'Initially proposed dropoff time']
+    dropoff_time timestamp [note: 'Actual/confirmed dropoff time']
+
+    created_at timestamp [note: 'When the booking was created']
+    updated_at timestamp [note: 'Last time the booking was modified']
+
+    Note: '''
+    Central table for managing ride bookings. Tracks the entire lifecycle of a booking 
+    from creation to completion, including:
+    - Complete booking timing details
+    - Status changes and passenger states
+    - Links to original search request
+    - Management of both proposed and actual pickup/dropoff times
+    '''
+}
