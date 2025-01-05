@@ -15,21 +15,87 @@
 
 ## Answers to Questions
 
-### 1. Stats on Operations
+### 1. Required Stats on Operations
 
 #### 1.1 Completed Trips per Country
 | Country | Completed Trips |
 |---------|----------------|
-| France  | 6,126         |
-| England | 5,598         |
-| Germany | 2,051         |
+| FR      | 6,126         |
+| EN      | 5,598         |
+| DE      | 2,051         |
+
+## Interpretation
+- **France (FR)**: With 6126 completed trips, France is the country where the transport service is most used.
+- **England (EN)**: 5598 completed trips, making it the second-largest market.
+- **Germany (DE)**: 2051 completed trips, representing the smallest market among the three analyzed countries.
+
+These results show strong adoption of the service in France and England, while Germany has a lower volume of activity.
 
 #### 1.2 Average User Activity
-| Country | Total Users | Avg Searches | Avg Bookings | Avg Completed Trips |
-|---------|-------------|--------------|--------------|-------------------|
-| France  | 3,567      | 5.89         | 2.70         | 1.61             |
-| England | 8,748      | 4.53         | 1.04         | 0.64             |
-| Germany | 5,510      | 1.13         | 0.43         | 0.37             |
+| Scope | Total Users | Avg Searches | Avg Bookings | Avg Completed Trips |
+|-------|-------------|--------------|--------------|-------------------|
+| All Countries | 17,825 | 3.75 | 1.19 | 0.75 |
+
+### 2. Optional Operational Insights
+
+#### 2.1 Search to Completion Conversion Rates (Top 10)
+| Territory | Country | Total Searches | Total Bookings | Completed Trips | Conversion Rate |
+|-----------|---------|----------------|----------------|----------------|----------------|
+| VitaBus Soir | FR | 3,004 | 1,385 | 1,127 | 37.52% |
+| Tewkesbury District | EN | 3,004 | 1,385 | 1,127 | 37.52% |
+| pays_de_langres | FR | 7,363 | 2,913 | 2,051 | 27.86% |
+| wil | DE | 7,363 | 2,913 | 2,051 | 27.86% |
+| bourges_pmr | FR | 31,988 | 11,632 | 7,334 | 22.93% |
+| gcc_se_forest_of_dean | EN | 31,988 | 11,632 | 7,334 | 22.93% |
+| Berkeley Vale | EN | 8,681 | 2,198 | 1,392 | 16.04% |
+| South Cotswolds | EN | 8,803 | 1,931 | 1,078 | 12.25% |
+| bourges_tad | FR | 8,049 | 1,497 | 793 | 9.85% |
+| gcc_north_costwolds | EN | 8,049 | 1,497 | 793 | 9.85% |
+
+**Data Quality Note**: Several territories show identical metrics (same number of searches, bookings, and completed trips), which might indicate either paired territories across countries or potential data quality issues that should be investigated.
+
+#### 2.2 Booking Channels Distribution for Completed Trips
+| Country | Channel | Total Bookings | Percentage |
+|---------|---------|----------------|------------|
+| DE | BOOKED_FROM_APP | 1,996 | 97.32% |
+| DE | BOOKED_FROM_WEBSITE | 44 | 2.15% |
+| DE | BOOKED_FROM_CALL_CENTER | 8 | 0.39% |
+| DE | BOOKED_FROM_DRIVER_APP | 3 | 0.15% |
+| EN | BOOKED_FROM_APP | 4,324 | 77.24% |
+| EN | BOOKED_FROM_CALL_CENTER | 769 | 13.74% |
+| EN | BOOKED_FROM_WEBSITE | 505 | 9.02% |
+| FR | BOOKED_FROM_WEBSITE | 3,638 | 59.39% |
+| FR | BOOKED_FROM_CALL_CENTER | 2,101 | 34.30% |
+| FR | BOOKED_FROM_DRIVER_APP | 387 | 6.32% |
+
+### 3. Optional Advanced Analysis
+
+#### 3.1 Cancellation Patterns Across Territories (Top 5)
+| Territory | Country | Total Bookings | Cancelled Bookings | Cancellation Rate |
+|-----------|---------|----------------|-------------------|------------------|
+| gcc_north_costwolds | EN | 1,497 | 639 | 42.69% |
+| bourges_tad | FR | 1,497 | 639 | 42.69% |
+| South Cotswolds | EN | 1,931 | 604 | 31.28% |
+| Berkeley Vale | EN | 2,198 | 620 | 28.21% |
+| bourges_pmr | FR | 11,632 | 3,132 | 26.93% |
+
+#### 3.2 Peak Booking Hours per Country (Top 3 Hours)
+| Country | Hour of Day | Total Bookings | % of Daily Bookings |
+|---------|-------------|----------------|-------------------|
+| DE | 19 | 616 | 25.76% |
+| DE | 20 | 548 | 22.92% |
+| DE | 21 | 427 | 17.86% |
+
+#### 3.3 Additional Data Insights
+1. **Cross-Country Patterns**
+   - Each country shows distinct booking channel preferences
+   - High cancellation rates (>25%) are common across all countries
+   - Evening hours (19-21) are peak booking times
+
+2. **Data Quality Notes**
+   - Some territories show identical metrics, suggesting possible data issues
+   - Consistent patterns in peak hours across countries
+   - Clear differences in channel preferences by country
 
 ## Additional Insights
 

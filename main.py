@@ -105,17 +105,15 @@ def create_reports(conn) -> None:
     -- 2. Average metrics per user
     CREATE OR REPLACE VIEW reporting.user_engagement_metrics AS
     SELECT 
-        u.country,
+        'All Countries' as scope,
         COUNT(DISTINCT CONCAT(u.user_id, '_', u.product_slug)) as total_users,
         ROUND(COUNT(DISTINCT s.search_id)::FLOAT / COUNT(DISTINCT CONCAT(u.user_id, '_', u.product_slug)), 2) as avg_searches_per_user,
         ROUND(COUNT(DISTINCT b.booking_id)::FLOAT / COUNT(DISTINCT CONCAT(u.user_id, '_', u.product_slug)), 2) as avg_bookings_per_user,
         ROUND(COUNT(DISTINCT CASE WHEN b.is_completed_trip THEN b.booking_id END)::FLOAT / 
-              COUNT(DISTINCT CONCAT(u.user_id, '_', u.product_slug)), 2) as avg_completed_trips_per_user
+            COUNT(DISTINCT CONCAT(u.user_id, '_', u.product_slug)), 2) as avg_completed_trips_per_user
     FROM prepared.users u
     LEFT JOIN prepared.searches s ON u.user_id = s.user_id AND u.product_slug = s.product_slug
-    LEFT JOIN prepared.bookings b ON u.user_id = b.user_id AND u.product_slug = b.product_slug
-    GROUP BY u.country
-    ORDER BY total_users DESC;
+    LEFT JOIN prepared.bookings b ON u.user_id = b.user_id AND u.product_slug = b.product_slug;
 
     -- 3. Territory conversion rates
     CREATE OR REPLACE VIEW reporting.territory_conversion_rates AS
@@ -135,6 +133,80 @@ def create_reports(conn) -> None:
     GROUP BY pt.name, p.country_code
     HAVING COUNT(DISTINCT s.search_id) > 0
     ORDER BY total_searches DESC;
+
+    -- 4. Booking channel distribution for completed trips
+    CREATE OR REPLACE VIEW reporting.booking_channels_analysis AS
+    SELECT 
+        b.country,
+        db.booked_from,
+        COUNT(DISTINCT b.booking_id) as total_bookings,
+        ROUND(COUNT(DISTINCT b.booking_id)::FLOAT / 
+            SUM(COUNT(DISTINCT b.booking_id)) OVER (PARTITION BY b.country) * 100, 2) as percentage
+    FROM prepared.bookings b
+    JOIN raw.dispatch_bookings db ON b.booking_id = db.id
+    WHERE b.is_completed_trip = TRUE
+    GROUP BY b.country, db.booked_from
+    ORDER BY b.country, total_bookings DESC;
+
+    -- 5. Cancellation rates by territory
+    CREATE OR REPLACE VIEW reporting.cancellation_analysis AS
+    SELECT 
+        pt.name as territory_name,
+        p.country_code as country,
+        COUNT(DISTINCT b.booking_id) as total_bookings,
+        COUNT(DISTINCT CASE WHEN b.status LIKE 'CANCELED%' THEN b.booking_id END) as cancelled_bookings,
+        ROUND(COUNT(DISTINCT CASE WHEN b.status LIKE 'CANCELED%' THEN b.booking_id END)::FLOAT / 
+            NULLIF(COUNT(DISTINCT b.booking_id), 0) * 100, 2) as cancellation_rate
+    FROM raw.product_territories pt
+    JOIN raw.products p ON pt.product_slug = p.slug
+    LEFT JOIN prepared.bookings b ON pt.id = b.territory_id
+    GROUP BY pt.name, p.country_code
+    HAVING COUNT(DISTINCT b.booking_id) > 0
+    ORDER BY cancellation_rate DESC;
+
+    -- 6. Peak hours analysis by country
+    CREATE OR REPLACE VIEW reporting.peak_hours_analysis AS
+    SELECT 
+        country,
+        EXTRACT(HOUR FROM booking_datetime) as hour_of_day,
+        COUNT(DISTINCT booking_id) as total_bookings,
+        ROUND(COUNT(DISTINCT booking_id)::FLOAT / 
+            SUM(COUNT(DISTINCT booking_id)) OVER (PARTITION BY country) * 100, 2) as percentage_of_daily_bookings
+    FROM prepared.bookings
+    GROUP BY country, hour_of_day
+    ORDER BY country, total_bookings DESC;
+
+    -- Add conversion rates analysis (optimized)
+    CREATE OR REPLACE VIEW reporting.search_to_completion_rates AS
+    WITH search_stats AS (
+        SELECT 
+            territory_id,
+            COUNT(DISTINCT search_id) as total_searches
+        FROM prepared.searches
+        GROUP BY territory_id
+    ),
+    booking_stats AS (
+        SELECT 
+            territory_id,
+            COUNT(DISTINCT booking_id) as total_bookings,
+            COUNT(DISTINCT CASE WHEN is_completed_trip THEN booking_id END) as completed_trips
+        FROM prepared.bookings
+        GROUP BY territory_id
+    )
+    SELECT 
+        pt.name as territory_name,
+        p.country_code as country,
+        COALESCE(s.total_searches, 0) as total_searches,
+        COALESCE(b.total_bookings, 0) as total_bookings,
+        COALESCE(b.completed_trips, 0) as completed_trips,
+        ROUND(COALESCE(b.completed_trips, 0)::FLOAT / NULLIF(s.total_searches, 0) * 100, 2) as search_to_completion_rate
+    FROM raw.product_territories pt
+    JOIN raw.products p ON pt.product_slug = p.slug
+    LEFT JOIN search_stats s ON pt.id = s.territory_id
+    LEFT JOIN booking_stats b ON pt.id = b.territory_id
+    WHERE s.total_searches > 0
+    ORDER BY search_to_completion_rate DESC
+    LIMIT 10;
     """
     conn.sql(sql)
 
@@ -159,12 +231,44 @@ def user_averages(conn) -> None:
     What's the average number of searches, bookings, and completed trips per user?"""
     sql = """
     SELECT 
-        country,
+        scope,
         total_users,
         avg_searches_per_user,
         avg_bookings_per_user,
         avg_completed_trips_per_user
     FROM reporting.user_engagement_metrics;
+    """
+    conn.sql(sql).show()
+
+
+def analyze_booking_channels(conn) -> None:
+    """Question 2.2: What's the distribution of booking channels for completed trips?"""
+    sql = """
+    SELECT * FROM reporting.booking_channels_analysis;
+    """
+    conn.sql(sql).show()
+
+
+def analyze_cancellations(conn) -> None:
+    """Question 2.3: What are the cancellation patterns across territories?"""
+    sql = """
+    SELECT * FROM reporting.cancellation_analysis;
+    """
+    conn.sql(sql).show()
+
+
+def analyze_peak_hours(conn) -> None:
+    """Question 2.4: What are the peak booking hours per country?"""
+    sql = """
+    SELECT * FROM reporting.peak_hours_analysis;
+    """
+    conn.sql(sql).show()
+
+
+def analyze_conversion_rates(conn) -> None:
+    """Question 2.1: What's the conversion rate from searches to completed trips per territory?"""
+    sql = """
+    SELECT * FROM reporting.search_to_completion_rates;
     """
     conn.sql(sql).show()
 
@@ -190,6 +294,20 @@ if __name__ == "__main__":
 
         print("\nUser activity averages:")
         user_averages(conn)
+
+        print("\nOptional Analysis Results:")
+
+        print("\nSearch to Completion Conversion Rates:")
+        analyze_conversion_rates(conn)
+
+        print("\nBooking Channels Distribution:")
+        analyze_booking_channels(conn)
+
+        print("\nCancellation Analysis:")
+        analyze_cancellations(conn)
+
+        print("\nPeak Hours Analysis:")
+        analyze_peak_hours(conn)
 
     except Exception as e:
         print(f"Error: {e}")
