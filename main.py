@@ -137,16 +137,15 @@ def create_reports(conn) -> None:
     -- 4. Booking channel distribution for completed trips
     CREATE OR REPLACE VIEW reporting.booking_channels_analysis AS
     SELECT 
-        b.country,
         db.booked_from,
         COUNT(DISTINCT b.booking_id) as total_bookings,
         ROUND(COUNT(DISTINCT b.booking_id)::FLOAT / 
-            SUM(COUNT(DISTINCT b.booking_id)) OVER (PARTITION BY b.country) * 100, 2) as percentage
+            SUM(COUNT(DISTINCT b.booking_id)) OVER () * 100, 2) as percentage
     FROM prepared.bookings b
     JOIN raw.dispatch_bookings db ON b.booking_id = db.id
     WHERE b.is_completed_trip = TRUE
-    GROUP BY b.country, db.booked_from
-    ORDER BY b.country, total_bookings DESC;
+    GROUP BY db.booked_from
+    ORDER BY total_bookings DESC;
 
     -- 5. Cancellation rates by territory
     CREATE OR REPLACE VIEW reporting.cancellation_analysis AS
@@ -239,6 +238,14 @@ def user_averages(conn) -> None:
     conn.sql(sql).show()
 
 
+def analyze_conversion_rates(conn) -> None:
+    """Question 2.1: What's the conversion rate from searches to completed trips per territory?"""
+    sql = """
+    SELECT * FROM reporting.search_to_completion_rates;
+    """
+    conn.sql(sql).show()
+
+
 def analyze_booking_channels(conn) -> None:
     """Question 2.2: What's the distribution of booking channels for completed trips?"""
     sql = """
@@ -259,14 +266,6 @@ def analyze_peak_hours(conn) -> None:
     """Question 2.4: What are the peak booking hours per country?"""
     sql = """
     SELECT * FROM reporting.peak_hours_analysis;
-    """
-    conn.sql(sql).show()
-
-
-def analyze_conversion_rates(conn) -> None:
-    """Question 2.1: What's the conversion rate from searches to completed trips per territory?"""
-    sql = """
-    SELECT * FROM reporting.search_to_completion_rates;
     """
     conn.sql(sql).show()
 
@@ -301,11 +300,11 @@ if __name__ == "__main__":
         print("\nBooking Channels Distribution:")
         analyze_booking_channels(conn)
 
-        print("\nCancellation Analysis:")
-        analyze_cancellations(conn)
+        # print("\nCancellation Analysis:")
+        # analyze_cancellations(conn)
 
-        print("\nPeak Hours Analysis:")
-        analyze_peak_hours(conn)
+        # print("\nPeak Hours Analysis:")
+        # analyze_peak_hours(conn)
 
     except Exception as e:
         print(f"Error: {e}")
