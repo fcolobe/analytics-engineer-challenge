@@ -61,19 +61,20 @@ These results show strong adoption of the service in France and England, while G
 
 **Data Quality Note**: Several territories show identical metrics (same number of searches, bookings, and completed trips), which might indicate either paired territories across countries or potential data quality issues that should be investigated.
 
-#### 2.2 Booking Channels Distribution for Completed Trips
-| Country | Channel | Total Bookings | Percentage |
-|---------|---------|----------------|------------|
-| DE | BOOKED_FROM_APP | 1,996 | 97.32% |
-| DE | BOOKED_FROM_WEBSITE | 44 | 2.15% |
-| DE | BOOKED_FROM_CALL_CENTER | 8 | 0.39% |
-| DE | BOOKED_FROM_DRIVER_APP | 3 | 0.15% |
-| EN | BOOKED_FROM_APP | 4,324 | 77.24% |
-| EN | BOOKED_FROM_CALL_CENTER | 769 | 13.74% |
-| EN | BOOKED_FROM_WEBSITE | 505 | 9.02% |
-| FR | BOOKED_FROM_WEBSITE | 3,638 | 59.39% |
-| FR | BOOKED_FROM_CALL_CENTER | 2,101 | 34.30% |
-| FR | BOOKED_FROM_DRIVER_APP | 387 | 6.32% |
+#### 2.2 Booking Channels Distribution
+| Channel | Total Bookings | Percentage |
+|---------|----------------|------------|
+| BOOKED_FROM_APP | 6,320 | 45.88% |
+| BOOKED_FROM_WEBSITE | 4,187 | 30.40% |
+| BOOKED_FROM_CALL_CENTER | 2,878 | 20.89% |
+| BOOKED_FROM_DRIVER_APP | 390 | 2.83% |
+
+**Interpretation**:
+- Mobile app is the dominant booking channel, accounting for nearly half (45.88%) of all completed trips
+- Digital channels (app + website) represent over 76% of bookings, showing strong digital adoption
+- Call center remains a significant channel (20.89%), suggesting the importance of maintaining human support
+- Driver app bookings are minimal (2.83%), possibly reserved for specific use cases or emergency situations
+- The distribution suggests a well-balanced multi-channel strategy with a clear digital-first approach
 
 ### 3. Optional Advanced Analysis
 
