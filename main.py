@@ -231,8 +231,6 @@ def user_averages(conn) -> None:
     What's the average number of searches, bookings, and completed trips per user?"""
     sql = """
     SELECT 
-        scope,
-        total_users,
         avg_searches_per_user,
         avg_bookings_per_user,
         avg_completed_trips_per_user
