@@ -24,7 +24,7 @@
 | EN      | 5,598         |
 | DE      | 2,051         |
 
-## Interpretation
+##### Interpretation:
 - **France (FR)**: With 6126 completed trips, France is the country where the transport service is most used.
 - **England (EN)**: 5598 completed trips, making it the second-largest market.
 - **Germany (DE)**: 2051 completed trips, representing the smallest market among the three analyzed countries.
@@ -32,13 +32,20 @@
 These results show strong adoption of the service in France and England, while Germany has a lower volume of activity.
 
 #### 1.2 Average User Activity
-| Scope | Total Users | Avg Searches | Avg Bookings | Avg Completed Trips |
-|-------|-------------|--------------|--------------|-------------------|
-| All Countries | 17,825 | 3.75 | 1.19 | 0.75 |
+| Avg Searches | Avg Bookings | Avg Completed Trips |
+|--------------|--------------|---------------------|
+| 3.75 | 1.19 | 0.75 |
+
+##### Interpretation:
+- On average, users perform 3.75 searches before making a booking
+- The conversion from searches to bookings is approximately 32% (1.19/3.75)
+- About 63% of bookings result in completed trips (0.75/1.19)
+- The overall funnel shows a natural drop from search to completion, with users needing multiple searches to convert to a single booking
+- Each user completes 0.75 trips on average, indicating that some users are occasional riders while others might be regular users
 
 ### 2. Optional Operational Insights
 
-#### 2.1 Search to Completion Conversion Rates (Top 10)
+#### 2.1 Search to Completion Conversion Rates
 | Territory | Country | Total Searches | Total Bookings | Completed Trips | Conversion Rate |
 |-----------|---------|----------------|----------------|----------------|----------------|
 | VitaBus Soir | FR | 3,004 | 1,385 | 1,127 | 37.52% |
