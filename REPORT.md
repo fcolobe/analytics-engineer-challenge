@@ -25,41 +25,44 @@
 | DE      | 2,051         |
 
 ##### Interpretation:
-- **France (FR)**: With 6126 completed trips, France is the country where the transport service is most used.
-- **England (EN)**: 5598 completed trips, making it the second-largest market.
-- **Germany (DE)**: 2051 completed trips, representing the smallest market among the three analyzed countries.
-
-These results show strong adoption of the service in France and England, while Germany has a lower volume of activity.
+- France leads with 6,126 completed trips, showing the strongest market presence
+- England follows with 5,598 completed trips
+- Germany shows lower adoption with 2,051 completed trips
 
 #### 1.2 Average User Activity
 | Avg Searches | Avg Bookings | Avg Completed Trips |
 |--------------|--------------|---------------------|
-| 3.75 | 1.19 | 0.75 |
+| 3.75         | 1.19        | 0.75               |
 
 ##### Interpretation:
-- On average, users perform 3.75 searches before making a booking
-- The conversion from searches to bookings is approximately 32% (1.19/3.75)
-- About 63% of bookings result in completed trips (0.75/1.19)
-- The overall funnel shows a natural drop from search to completion, with users needing multiple searches to convert to a single booking
-- Each user completes 0.75 trips on average, indicating that some users are occasional riders while others might be regular users
+- Users perform an average of 3.75 searches before making a booking
+- Each user makes approximately 1.19 bookings on average
+- The average of 0.75 completed trips per user suggests that not all bookings result in completed trips
+- The conversion funnel shows expected drop-offs at each stage
 
 ### 2. Optional Operational Insights
 
-#### 2.1 Search to Completion Conversion Rates
+#### 2.1 Search to Completion Conversion Rates by Territory
 | Territory | Country | Total Searches | Total Bookings | Completed Trips | Conversion Rate |
-|-----------|---------|----------------|----------------|----------------|----------------|
-| VitaBus Soir | FR | 3,004 | 1,385 | 1,127 | 37.52% |
+|-----------|---------|----------------|----------------|-----------------|----------------|
 | Tewkesbury District | EN | 3,004 | 1,385 | 1,127 | 37.52% |
-| pays_de_langres | FR | 7,363 | 2,913 | 2,051 | 27.86% |
+| VitaBus Soir | FR | 3,004 | 1,385 | 1,127 | 37.52% |
 | wil | DE | 7,363 | 2,913 | 2,051 | 27.86% |
-| bourges_pmr | FR | 31,988 | 11,632 | 7,334 | 22.93% |
+| pays_de_langres | FR | 7,363 | 2,913 | 2,051 | 27.86% |
 | gcc_se_forest_of_dean | EN | 31,988 | 11,632 | 7,334 | 22.93% |
+| bourges_pmr | FR | 31,988 | 11,632 | 7,334 | 22.93% |
 | Berkeley Vale | EN | 8,681 | 2,198 | 1,392 | 16.04% |
 | South Cotswolds | EN | 8,803 | 1,931 | 1,078 | 12.25% |
-| bourges_tad | FR | 8,049 | 1,497 | 793 | 9.85% |
 | gcc_north_costwolds | EN | 8,049 | 1,497 | 793 | 9.85% |
+| bourges_tad | FR | 8,049 | 1,497 | 793 | 9.85% |
 
-**Data Quality Note**: Several territories show identical metrics (same number of searches, bookings, and completed trips), which might indicate either paired territories across countries or potential data quality issues that should be investigated.
+##### Interpretation:
+- Highest conversion rates are seen in Tewkesbury District (EN) and VitaBus Soir (FR) at 37.52%
+- Lowest conversion rates are in gcc_north_costwolds (EN) and bourges_tad (FR) at 9.85%
+- Several territories show identical metrics, suggesting potential data quality issues or shared operational characteristics
+- Conversion rates vary significantly from 9.85% to 37.52%, indicating large performance differences between territories
+
+**Data Quality Note**: Multiple territories show identical metrics across all columns, which warrants further investigation.
 
 #### 2.2 Booking Channels Distribution
 | Channel | Total Bookings | Percentage |
@@ -69,67 +72,25 @@ These results show strong adoption of the service in France and England, while G
 | BOOKED_FROM_CALL_CENTER | 2,878 | 20.89% |
 | BOOKED_FROM_DRIVER_APP | 390 | 2.83% |
 
-**Interpretation**:
-- Mobile app is the dominant booking channel, accounting for nearly half (45.88%) of all completed trips
-- Digital channels (app + website) represent over 76% of bookings, showing strong digital adoption
-- Call center remains a significant channel (20.89%), suggesting the importance of maintaining human support
-- Driver app bookings are minimal (2.83%), possibly reserved for specific use cases or emergency situations
-- The distribution suggests a well-balanced multi-channel strategy with a clear digital-first approach
-
-### 3. Optional Advanced Analysis
-
-#### 3.1 Cancellation Patterns Across Territories (Top 5)
-| Territory | Country | Total Bookings | Cancelled Bookings | Cancellation Rate |
-|-----------|---------|----------------|-------------------|------------------|
-| gcc_north_costwolds | EN | 1,497 | 639 | 42.69% |
-| bourges_tad | FR | 1,497 | 639 | 42.69% |
-| South Cotswolds | EN | 1,931 | 604 | 31.28% |
-| Berkeley Vale | EN | 2,198 | 620 | 28.21% |
-| bourges_pmr | FR | 11,632 | 3,132 | 26.93% |
-
-#### 3.2 Peak Booking Hours per Country (Top 3 Hours)
-| Country | Hour of Day | Total Bookings | % of Daily Bookings |
-|---------|-------------|----------------|-------------------|
-| DE | 19 | 616 | 25.76% |
-| DE | 20 | 548 | 22.92% |
-| DE | 21 | 427 | 17.86% |
-
-#### 3.3 Additional Data Insights
-1. **Cross-Country Patterns**
-   - Each country shows distinct booking channel preferences
-   - High cancellation rates (>25%) are common across all countries
-   - Evening hours (19-21) are peak booking times
-
-2. **Data Quality Notes**
-   - Some territories show identical metrics, suggesting possible data issues
-   - Consistent patterns in peak hours across countries
-   - Clear differences in channel preferences by country
-
-## Additional Insights
-
-1. **Conversion Patterns**
-   - France shows the highest engagement and conversion rates
-   - England has the largest user base but moderate conversion
-   - Germany shows lower engagement across all metrics
-
-2. **User Behavior**
-   - French users are more likely to complete their bookings
-   - English users show good initial interest but lower conversion
-   - German market might need investigation for low engagement
+##### Interpretation:
+- Mobile app is the preferred booking channel (45.88%)
+- Digital channels (app + website) account for 76.28% of bookings
+- Call center remains significant with 20.89%
+- Driver app shows minimal usage at 2.83%
 
 ## Assumptions Made
 
-1. A trip is considered completed when:
-   - `passenger_status = 'DROPOFF'`
-   - `status = 'VALIDATED'`
+1. Trip completion criteria:
+   - Based on `passenger_status` and `status` fields
+   - Only fully completed and validated trips are counted
 
-2. User uniqueness:
-   - Users are unique per product
-   - Used combination of user_id and product_slug for unique identification
+2. User identification:
+   - Users are unique within each product
+   - Composite keys used for cross-product analysis
 
-3. Data quality:
-   - All timestamps are in the same timezone
-   - No duplicate entries in raw data 
+3. Data integrity:
+   - Consistent timezone usage
+   - No duplicate records in source data
 
 ## Technical Implementation Details
 
@@ -139,37 +100,18 @@ These results show strong adoption of the service in France and England, while G
    - Reporting Layer: Aggregated metrics and KPIs
 
 2. **Performance Considerations**
-   - Used appropriate indexes through DuckDB
-   - Minimized redundant joins
-   - Implemented efficient aggregations
-
-## Potential Improvements
-
-With more time, I would:
-1. Add data quality checks
-2. Implement time-based analyses (daily/weekly trends)
-3. Add booking channel analysis
-4. Create territory-level conversion funnels
-5. Add documentation directly in SQL using comments
-
-## Data Quality Notes
-
-1. **Completeness**
-   - All countries have data representation
-   - No missing values in key identifier fields
-
-2. **Consistency**
-   - Booking statuses are standardized
-   - Territory mapping is consistent across products
+   - Optimized view structure
+   - Efficient join patterns
+   - Proper indexing through DuckDB
 
 ## Future Recommendations
 
-1. **Monitoring Suggestions**
-   - Track conversion rates over time
-   - Monitor booking completion rates by territory
-   - Set up alerts for unusual drops in engagement
+1. **Data Quality**
+   - Investigate identical metrics across territories
+   - Add data validation checks
+   - Implement monitoring for key metrics
 
 2. **Analysis Extensions**
-   - Add peak hours analysis
-   - Implement cohort analysis
-   - Add seasonal trend analysis 
+   - Add time-based analysis
+   - Implement user segmentation
+   - Add geographic performance analysis 
