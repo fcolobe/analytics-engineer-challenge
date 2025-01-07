@@ -1,0 +1,92 @@
+// Prepared views documentation
+Table prepared.users {
+    user_id integer [pk]
+    product_slug str
+    registered_at timestamp
+    product_name str
+    country str
+
+    Note: '''
+    Normalized view of users with their product information.
+    Includes country information through product join.
+    '''
+}
+
+Table prepared.searches {
+    search_id integer [pk]
+    user_id integer
+    territory_id integer
+    product_slug str
+    passengers_number integer
+    nb_propositions integer
+    search_datetime timestamp
+    territory_name str
+    country str
+
+    Note: '''
+    Enhanced view of searches with territorial context.
+    Includes joins with territories and countries.
+    '''
+}
+
+Table prepared.bookings {
+    booking_id integer [pk]
+    user_id integer
+    territory_id integer
+    product_slug str
+    status str
+    passenger_status str
+    booking_datetime timestamp
+    pickup_datetime timestamp
+    is_completed_trip boolean
+    country str
+
+    Note: '''
+    View of bookings with completion status.
+    Includes is_completed_trip flag based on status and passenger_status.
+    '''
+}
+
+// Reporting views documentation
+Table reporting.completed_trips_by_country {
+    country str [pk]
+    completed_trips_count integer
+
+    Note: '''
+    Aggregation of completed trips by country.
+    '''
+}
+
+Table reporting.user_engagement_metrics {
+    total_users integer
+    avg_searches_per_user decimal
+    avg_bookings_per_user decimal
+    avg_completed_trips_per_user decimal
+
+    Note: '''
+    Average user engagement metrics across the platform.
+    '''
+}
+
+Table reporting.territory_conversion_rates {
+    territory_name str [pk]
+    country str
+    total_searches integer
+    total_bookings integer
+    completed_trips integer
+    conversion_rate decimal
+
+    Note: '''
+    Territory-level conversion rates from search to completed trip.
+    '''
+}
+
+Table reporting.booking_channels_analysis {
+    booked_from str [pk]
+    total_bookings integer
+    percentage decimal
+
+    Note: '''
+    Distribution of booking channels for completed trips.
+    '''
+}
