@@ -145,15 +145,13 @@ def create_reports(conn) -> None:
         p.country_code as country,
         COALESCE(s.total_searches, 0) as total_searches,
         COALESCE(b.total_bookings, 0) as total_bookings,
-        ROUND(COALESCE(b.total_bookings, 0)::FLOAT / NULLIF(s.total_searches, 0) * 100, 2) as search_to_booking_rate,
         COALESCE(b.completed_trips, 0) as completed_trips,
-        ROUND(COALESCE(b.completed_trips, 0)::FLOAT / NULLIF(s.total_searches, 0) * 100, 2) as search_to_completion_rate
+        ROUND(COALESCE(b.completed_trips, 0)::FLOAT / NULLIF(s.total_searches, 0) * 100, 2) as conversion_rate
     FROM raw.product_territories pt
     JOIN raw.products p ON pt.product_slug = p.slug
     LEFT JOIN search_stats s ON pt.id = s.territory_id
     LEFT JOIN booking_stats b ON pt.id = b.territory_id
-    WHERE s.total_searches > 0
-    ORDER BY total_searches DESC;
+    ORDER BY conversion_rate DESC;
 
     -- 4. Booking channel distribution for completed trips
     CREATE OR REPLACE VIEW reporting.booking_channels_analysis AS
@@ -207,7 +205,7 @@ def user_averages(conn) -> None:
 def analyze_conversion_rates(conn) -> None:
     """Question 2.1: What's the conversion rate from searches to completed trips per territory?"""
     sql = """
-    SELECT * FROM reporting.search_to_completion_rates;
+        SELECT * FROM reporting.territory_conversion_rates;
     """
     conn.sql(sql).show()
 
