@@ -1,5 +1,7 @@
 # Analytics Engineering Technical Test Report
 
+**Author:** Fonty COLO BE
+
 ## Data Modeling Choices
 
 1. **Prepared Layer**
